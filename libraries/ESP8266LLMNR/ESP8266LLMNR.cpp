@@ -50,7 +50,7 @@ extern "C" {
 
 //#define LLMNR_DEBUG
 
-#define BIT(x) (1 << (x))
+//#define BIT(x) (1 << (x))
 
 #define FLAGS_QR                BIT(15)
 #define FLAGS_OP_SHIFT          11
@@ -241,7 +241,7 @@ void LLMNRResponder::_process_packet() {
 
     // Header
     uint8_t header[] = {
-        id >> 8, id & 0xff, // ID
+        uint8_t(id >> 8), uint8_t(id & 0xff), // ID
         FLAGS_QR >> 8, 0, // FLAGS
         0, 1, // QDCOUNT
         0, !!have_rr, // ANCOUNT
@@ -268,7 +268,7 @@ void LLMNRResponder::_process_packet() {
             0, 1, // CLASS (IN)
             0, 0, 0, 30, // TTL (30 seconds)
             0, 4, // RDLENGTH
-            ip & 0xff, (ip >> 8) & 0xff, (ip >> 16) & 0xff, (ip >> 24) & 0xff, // RDATA
+            uint8_t(ip & 0xff), uint8_t((ip >> 8) & 0xff), uint8_t((ip >> 16) & 0xff), uint8_t((ip >> 24) & 0xff), // RDATA
         };
         _conn->append(reinterpret_cast<const char*>(rr), sizeof(rr));
     }
